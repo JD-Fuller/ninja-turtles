@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="14a3b036-49cb-49dc-9574-f99747300289" basePath="/" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="ninja-turtlesFlow" doc:id="37e66f1d-2e87-4a42-bc01-605bcbde25fe" >
+		<http:listener doc:name="HTTP GET/turtles" doc:id="3ac49b29-bd21-49ff-8ade-1091c823bd0b" config-ref="HTTP_Listener_config" path="/turtles"/>
+		<set-variable value='"Leonardo"' doc:name="Set Variable" doc:id="5c699683-2ec6-43e2-9940-9a50e2127d91" variableName="turtle"/>
+		<set-payload value='#["is the best!"]' doc:name='"Leonardo"' doc:id="fd20c447-3572-4583-b52b-6569f54a3f00" />
+		<ee:transform doc:name="Transform Message" doc:id="a552d260-3b02-47ac-b1f3-f029a0b3524e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload ++ " " ++ vars.turtle]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
