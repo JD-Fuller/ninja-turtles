@@ -10,14 +10,22 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	</http:listener-config>
 	<flow name="ninja-turtlesFlow" doc:id="37e66f1d-2e87-4a42-bc01-605bcbde25fe" >
 		<http:listener doc:name="HTTP GET/turtles" doc:id="3ac49b29-bd21-49ff-8ade-1091c823bd0b" config-ref="HTTP_Listener_config" path="/turtles"/>
-		<set-variable value='"Leonardo"' doc:name="Set Variable" doc:id="5c699683-2ec6-43e2-9940-9a50e2127d91" variableName="turtle"/>
-		<set-payload value='#["is the best!"]' doc:name='"Leonardo"' doc:id="fd20c447-3572-4583-b52b-6569f54a3f00" />
+		<set-variable value='#[attributes.queryParams.weapon]' doc:name='"turtle"' doc:id="5c699683-2ec6-43e2-9940-9a50e2127d91" variableName="turtle"/>
+		<choice doc:name="Choice" doc:id="6ae21f64-3ebd-4c7c-baec-43080623f67f" >
+			<when expression='#[vars.turtle == "sword"]'>
+				<set-variable value='Leonardo' doc:name='"leonardo" Set Variable' doc:id="bbcc028c-9fbc-4618-9037-c320290d647a" variableName="leonardo"/>
+				<set-payload value='#[vars.leonardo ++ " is the best ninja turtle."]' doc:name="Set Payload" doc:id="101a4364-1d52-450b-848c-b60c4f9be7b5" />
+			</when>
+			<otherwise >
+				<set-payload value='#["You have not chosen the leader of the Ninja Turtles."]' doc:name="The other turtles" doc:id="1e65220b-190c-430e-a254-a4a5c77b3629" />
+			</otherwise>
+		</choice>
 		<ee:transform doc:name="Transform Message" doc:id="a552d260-3b02-47ac-b1f3-f029a0b3524e" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-payload ++ " " ++ vars.turtle]]></ee:set-payload>
+payload ++ " You may now start your journey.....as a ninja turtle padawan."]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
